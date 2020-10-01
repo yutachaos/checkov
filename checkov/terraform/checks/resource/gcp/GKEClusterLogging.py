@@ -1,8 +1,8 @@
-from checkov.terraform.checks.resource.base_resource_check import BaseResourceCheck
-from checkov.common.models.enums import CheckResult, CheckCategories
+from checkov.terraform.checks.resource.base_resource_negative_value_check import BaseResourceNegativeValueCheck
+from checkov.common.models.enums import CheckCategories
 
 
-class GKEClusterLogging(BaseResourceCheck):
+class GKEClusterLogging(BaseResourceNegativeValueCheck):
     def __init__(self):
         name = "Ensure Stackdriver Logging is set to Enabled on Kubernetes Engine Clusters"
         id = "CKV_GCP_1"
@@ -10,17 +10,18 @@ class GKEClusterLogging(BaseResourceCheck):
         categories = [CheckCategories.KUBERNETES]
         super().__init__(name=name, id=id, categories=categories, supported_resources=supported_resources)
 
-    def scan_resource_conf(self, conf):
+    def get_inspected_key(self):
         """
-            Looks for password configuration at azure_instance:
-            https://www.terraform.io/docs/providers/google/r/compute_ssl_policy.html
-        :param conf: google_compute_ssl_policy configuration
+        Looks for public accessibility:
+            https://www.terraform.io/docs/providers/aws/r/mq_broker.html#publicly_accessible
+            https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-amazonmq-broker.html
+        :param conf: aws_launch_configuration configuration
         :return: <CheckResult>
         """
-        if 'logging_service' in conf.keys():
-            if conf['logging_service'][0] == "none":
-                return CheckResult.FAILED
-        return CheckResult.PASSED
+        return 'logging_service'
+
+    def get_forbidden_values(self):
+        return ['none']
 
 
 check = GKEClusterLogging()
