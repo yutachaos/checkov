@@ -18,6 +18,7 @@ class BaseCheck(metaclass=MultiSignatureMeta):
         self.block_type = block_type
         self.supported_entities = supported_entities
         self.logger = logging.getLogger("{}".format(self.__module__))
+        self.evaluated_key = None
 
     def run(self, scanned_file, entity_configuration, entity_name, entity_type, skip_info):
         check_result = {}
@@ -37,6 +38,7 @@ class BaseCheck(metaclass=MultiSignatureMeta):
         else:
             try:
                 check_result['result'] = self.scan_entity_conf(entity_configuration, entity_type)
+                check_result['evaluated_key'] = self.get_evaluated_key()
                 message = "File {}, {}  \"{}.{}\" check \"{}\" Result: {} ".format(
                     scanned_file,
                     self.block_type,
@@ -71,3 +73,6 @@ class BaseCheck(metaclass=MultiSignatureMeta):
             return wrapped(self, conf)
 
         return wrapper
+
+    def get_evaluated_key(self):
+        return self.evaluated_key

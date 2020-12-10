@@ -92,3 +92,6 @@ class BaseResourceValueCheck(BaseResourceCheck):
         Returns the default expected value, governed by provider best practices
         """
         return True
+
+    def get_evaluated_key(self):
+        return self.get_inspected_key()
