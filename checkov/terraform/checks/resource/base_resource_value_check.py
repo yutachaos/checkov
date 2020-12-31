@@ -4,6 +4,7 @@ import re
 from checkov.terraform.checks.resource.base_resource_check import BaseResourceCheck
 from checkov.common.models.enums import CheckResult
 from checkov.common.models.consts import ANY_VALUE
+from checkov.common.util.type_forcers import force_list
 
 VARIABLE_DEPENDANT_REGEX = r'(?:local|var)\.[^\s]+'
 
@@ -93,5 +94,5 @@ class BaseResourceValueCheck(BaseResourceCheck):
         """
         return True
 
-    def get_evaluated_key(self):
-        return self.get_inspected_key()
+    def get_evaluated_keys(self):
+        return force_list(self.get_inspected_key())
