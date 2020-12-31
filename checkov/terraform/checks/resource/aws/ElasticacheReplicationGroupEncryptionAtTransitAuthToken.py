@@ -4,7 +4,7 @@ from checkov.terraform.checks.resource.base_resource_check import BaseResourceCh
 
 class ElasticacheReplicationGroupEncryptionAtTransitAuthToken(BaseResourceCheck):
     def __init__(self):
-        name = "Ensure all data stored in the Elasticache Replication Group  is securely encrypted at transit and has auth token"
+        name = "Ensure all data stored in the Elasticache Replication Group is securely encrypted at transit and has auth token"
         id = "CKV_AWS_31"
         supported_resources = ['aws_elasticache_replication_group']
         categories = [CheckCategories.ENCRYPTION]
@@ -17,9 +17,13 @@ class ElasticacheReplicationGroupEncryptionAtTransitAuthToken(BaseResourceCheck)
         :param conf: aws_elasticache_replication_group configuration
         :return: <CheckResult>
         """
-        if "transit_encryption_enabled" in conf.keys() and "auth_token" in conf.keys():
+        self.evaluated_keys = []
+        if "transit_encryption_enabled" in conf.keys():
+            self.evaluated_keys.append('transit_encryption_enabled')
             if conf["transit_encryption_enabled"][0]:
-                return CheckResult.PASSED
+                if "auth_token" in conf.keys():
+                    self.evaluated_keys.append('auth_token')
+                    return CheckResult.PASSED
         return CheckResult.FAILED
 
 

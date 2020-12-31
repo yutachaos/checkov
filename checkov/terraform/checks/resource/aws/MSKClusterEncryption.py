@@ -11,15 +11,20 @@ class MSKClusterEncryption(BaseResourceCheck):
         super().__init__(name=name, id=id, categories=categories, supported_resources=supported_resources)
 
     def scan_resource_conf(self, conf):
+        self.evaluated_keys = []
         if 'encryption_info' in conf.keys():
             encryption = conf['encryption_info'][0]
             if 'encryption_at_rest_kms_key_arn' in encryption:
                 if 'encryption_in_transit' in encryption:
+                    self.evaluated_keys.append('encryption_info/[0]/encryption_in_transit')
                     transit = encryption['encryption_in_transit'][0]
-                    if 'client_broker' in transit and transit['client_broker'][0] != 'TLS' or \
-                            'in_cluster' in transit and transit['in_cluster'][0] is False:
+                    if 'client_broker' in transit:
+                        self.evaluated_keys.append('encryption_info/[0]/encryption_in_transit/[0]/client_broker')
+                    if 'in_cluster' in transit:
+                        self.evaluated_keys.append('encryption_info/[0]/encryption_in_transit/[0]/in_cluster')
+                    if transit.get('client_broker')[0] != 'TLS' or transit.get('in_cluster')[0] is False:
                         return CheckResult.FAILED
-                    return CheckResult.PASSED
+                self.evaluated_keys.append('encryption_info/[0]/encryption_at_rest_kms_key_arn')
                 return CheckResult.PASSED
         return CheckResult.FAILED
 
