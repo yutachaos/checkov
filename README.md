@@ -45,6 +45,7 @@ Checkov also powers [**Bridgecrew**](https://bridgecrew.io/?utm_source=github&ut
  * Policies support evaluation of [variables](docs/2.Concepts/Evaluations.md) to their optional default value.
  * Supports in-line [suppression](docs/2.Concepts/Suppressions.md) of accepted risks or false-positives to reduce recurring scan failures. Also supports global skip from using CLI.
 * [Output](docs/1.Introduction/Results.md) currently available as CLI, JSON, JUnit XML and github markdown and link to remediation [guides](https://docs.bridgecrew.io/docs/aws-policy-index).
+* Integrates with the Bridgecrew platform for customized scanning and automated code fixes.
  
 ## Screenshots
 
@@ -176,7 +177,7 @@ Note that there are certain cases where redirecting `docker run --tty` output to
 ### Running or skipping checks 
 
 Using command line flags you can specify to run only named checks (allow list) or run all checks except 
-those listed (deny list).
+those listed (deny list). You can use Checkov IDs (beginning with `CKV_`) or Bridgecrew IDs (beginning with `BC_`).
 
 List available checks:
 ```sh
@@ -216,7 +217,7 @@ To skip a check on a given Terraform definition block or CloudFormation resource
 
 `checkov:skip=<check_id>:<suppression_comment>`
 
-* `<check_id>` is one of the [available check scanners](docs/3.Scans/resource-scans.md)
+* `<check_id>` is one of the [available check scanners](docs/3.Scans/resource-scans.md). You can use Checkov IDs (beginning with `CKV_`) or Bridgecrew IDs (beginning with `BC_`).
 * `<suppression_comment>` is an optional suppression reason to be included in the output
 
 #### Example
