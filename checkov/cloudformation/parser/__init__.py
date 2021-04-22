@@ -47,6 +47,9 @@ def parse(filename):
                     'Template %s is malformed: %s', filename, err.problem)
                 LOGGER.error('Tried to parse %s as JSON but got error: %s',
                              filename, str(json_err))
+        else:
+            LOGGER.error('Cannot read file contents: %s', filename)
+            LOGGER.error(err.problem)
     except YAMLError as err:
         pass
 
